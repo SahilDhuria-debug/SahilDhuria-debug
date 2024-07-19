@@ -1,0 +1,628 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class SahilDhuriaDSA {
+
+    //for fibonacci using recursion
+    static int nm1 = 0, nm2 = 1, nm3 = 0;
+    public static void main(String[] args) {
+        int sum = 25;
+        String strng = "abcdefghijklmnopqrstuvwxyz";
+        int arr[] = {15,-2,2,-8,1,7,10,23};
+        //int N = arr.length;
+        String str = "SahilDhuria";
+        char s = 'a';
+        int nmbr = 45454;
+        int[] myArr = new int[] {1,3,4,6,5,3,11};
+        int l = 7;
+        int count = 10;
+        System.out.print(nm1 + " " + nm2); //printing 0 and 1
+        printFibonacciUsingRec(count - 2); //n-2 because 2 numbers are already printed
+        reverseString(str);
+        palindromeString(str);
+        countOccurrence(str, s);
+        palindromeNumber(nmbr);
+        findfulcrum(myArr, l);
+        createFibonacci();
+        reverseWords("I am Sahil Dhuria");
+        isAnagram("sahil", "hilsa");
+        reverseNumber(76543);
+        maxLenUsingHashMap(arr);
+        secondLargestElement();
+        missingPangram(strng);
+        checkPangram(strng);
+        System.out.println(hasTwoCandidates(arr, sum));
+
+//Below is the block to understand String literals creation and their difference from String object creartion using new operator
+        // String s1 = "Hello";
+        // String s2 = "Hello";
+        // String s3 = new String("Hello");
+        // System.out.println(s1.equals(s2));
+        // System.out.println(s1 == s2);
+        // System.out.println(s1 == s3);
+        // System.out.println(s1.equals(s3));
+
+    }
+
+
+    //reverse a String
+    public static void reverseString(String str) {
+        //brute force- O(n2)
+        String reversedString = "";
+        for (int i = str.length() - 1; i >= 0; i--) {
+            reversedString = reversedString + str.charAt(i);
+        }
+        System.out.println("Reversed String: " + reversedString);
+        //optimized - O(n)
+        Deque < Character > stack = new ArrayDeque < > ();
+        for (int i = 0; i < str.length(); i++) {
+            stack.push(str.charAt(i));
+        }
+        StringBuilder rvrsdString = new StringBuilder();
+        while (!stack.isEmpty()) {
+            rvrsdString.append(stack.pop());
+        }
+        System.out.println("Reversed String: " + rvrsdString.toString());
+    }
+
+    //palindrome String
+    public static void palindromeString(String str) {
+        String reversedString = "";
+        for (int i = str.length() - 1; i >= 0; i--) {
+            reversedString = reversedString + str.charAt(i);
+        }
+        if (str.equals(reversedString)) {
+            System.out.println("String is palindrome");
+        } else {
+            System.out.println("String is not palindrome");
+        }
+    }
+
+//count occurrence of character
+    private static void countOccurrence(String str, char s) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (s == str.charAt(i)) {
+                count++;
+            }
+        }
+        System.out.println("Occurences: " + count);
+        //using inbuild java function
+        int ct = Collections.frequency(Arrays.asList(str.split("")), String.valueOf(s));
+        System.out.println("Occurences: " + ct);
+    }
+
+  //find if a number is palindrome or not
+    private static void palindromeNumber(int nmbr) {
+        int sum = 0;
+        int r = 0;
+        int temp = nmbr;
+        while (nmbr > 0) {
+            r = nmbr % 10;
+            sum = (sum * 10) + r;
+            nmbr = nmbr / 10;
+        }
+        if (temp == sum) {
+            System.out.println("Number is palindrome");
+        } else {
+            System.out.println("Number is not palindrome");
+        }
+    }
+    
+//finding fulcrum in an array
+    private static void findfulcrum(int numbers[], int n) {
+        //Brute force- O(n2)
+        List < Integer > list = Arrays.stream(numbers).boxed().collect(Collectors.toList());
+        for (int i = 1; i < n; i++) {
+            int leftSum = list.subList(0, i)
+                .stream()
+                .mapToInt(x - > x)
+                .sum();
+            int rightSum = list.subList(i + 1, n)
+                .stream()
+                .mapToInt(x - > x)
+                .sum();
+            if (leftSum == rightSum) {
+                System.out.println(list.get(i));
+                //return; //commenting so that optimized also gets executed
+            }
+        }
+        //Optimized solution- O(n)
+        {
+            // Create prefix sum array from 0
+            int[] prefixSum = new int[n];
+            prefixSum[0] = numbers[0];
+            for (int i = 1; i < n; i++) {
+                prefixSum[i] = prefixSum[i - 1] + numbers[i];
+            }
+            // Create suffix sum array from n-1
+            int[] suffixSum = new int[n];
+            suffixSum[n - 1] = numbers[n - 1];
+            for (int i = n - 2; i >= 0; i--) {
+                suffixSum[i] = suffixSum[i + 1] + numbers[i];
+            }
+            // Find the point where prefix and suffix sums are same
+            for (int i = 1; i < n - 1; i++) {
+                if (prefixSum[i] == suffixSum[i]) {
+                    System.out.println(numbers[i]);
+                    return;
+                }
+            }
+            System.out.println("fulcrum doesn't exist in this array");
+        }
+    }
+    
+//create fibonnaci series
+    private static void createFibonacci() {
+        //without using recursion
+        int n1 = 0;
+        int n2 = 1;
+        int count = 10;
+        int n3;
+        System.out.print(n1 + " " + n2);
+        for (int i = 2; i < count; i++) {
+            n3 = n1 + n2;
+            System.out.print(" " + n3);
+            n1 = n2;
+            n2 = n3;
+        }
+    }
+
+  // using recursion
+    private static void printFibonacciUsingRec(int ct) {
+        if (ct > 0) {
+            nm3 = nm1 + nm2;
+            nm1 = nm2;
+            nm2 = nm3;
+            System.out.print(" " + nm3);
+            printFibonacciUsingRec(ct - 1);
+        }
+    }
+
+//binary search (concept is to compare the middle element and then reduce the   search to left or right part accordingly)
+private static int binarySearch(int[] arr, int x) {
+    int left = 0;
+    int right = arr.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == x) {
+            return mid;
+        }
+        if (x > arr[mid]) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1; // element not found
+}
+
+//linear search
+private static int linearSearch(int[] arr, int x) {
+    for (int i = 0; i < arr.length; i++) {
+        if (arr[i] == x) {
+            return i;
+        }
+    }
+    return -1; // element not found
+}
+
+//find a prime number
+private static boolean primeNumber(int number) {
+    //Using trial division method where we do by testing
+    //whether n is divisible by any integer between 2 and sqrt{n}.
+    int sqrt = (int) Math.sqrt(number) + 1;
+    for (int i = 2; i < sqrt; i++) {
+        if (number % i == 0) {
+            // number is perfectly divisible - no prime
+            return false;
+        }
+    }
+    return true;
+}
+
+//Armstrong number
+private static boolean isArmStrong(int number) {
+    int r = 0;
+    int sum = 0;
+    int temp = number;
+    while (number != 0) {
+        r = number % 10;
+        sum = sum + r * r * r;
+        number = number / 10;
+    }
+    //number is Armstrong return true
+    if (temp == sum) {
+        return true;
+    }
+    return false;
+}
+
+//factorial of a number
+public static int factorial(int number) {
+    //Using recursion
+    if (number == 0) {
+        return 1;
+    }
+    return number * factorial(number - 1);
+}
+public static int fact(int number) {
+    //without recursion
+    int result = 1;
+    while (number != 0) {
+        result = result * number;
+        number--;
+    }
+    return result;
+}
+
+//Find all duplicate/repeating characters in a String and print each of them
+public static void printDuplicateCharacters(String str) {
+    char[] characters = str.toCharArray();
+    // build HashMap with character and number of times they appear in String
+    Map < Character, Integer > charMap = new HashMap < Character, Integer > (); //use
+    kedhashmap
+    if trying to find only first one
+    //(then
+    t
+    return once match found in iteration of map)
+for (Character ch: characters) {
+    if (charMap.containsKey(ch)) {
+        charMap.put(ch, charMap.get(ch) + 1);
+    } else {
+        charMap.put(ch, 1);
+    }
+}
+
+// Iterate through HashMap to print all duplicate characters of String
+Set < Map.Entry < Character, Integer >> entrySet = charMap.entrySet();
+System.out.printf("List of duplicate characters in String '%s' %n", str);
+for (Map.Entry < Character, Integer > entry: entrySet) {
+    if (entry.getValue() > 1) {
+        System.out.printf("%s : %d %n", entry.getKey(), entry.getValue());
+    }
+}
+}
+
+//find GCD of two numbers
+//Using recursion
+private static int findGCD(int X, int Y) {
+    //base case
+    if (Y == 0) {
+        return X;
+    }
+    return findGCD(Y, X % Y); //assign Y to X and X%Y to Y
+}
+
+//reversing an array in place (means without creating another array)
+public static void reverse(String[] array) {
+    if (array == null || array.length < 2) {
+        return;
+    }
+    for (int i = 0; i < array.length / 2; i++) {
+        String temp = array[i];
+        array[i] = array[array.length - 1 - i];
+        array[array.length - 1 - i] = temp;
+    }
+}
+
+//Method to reverse words in String
+public static String reverseWords(String sentence) {
+    List < String > words = Arrays.asList(sentence.split("\\s"));
+    //Collections.reverse(words); //we can use this method and then just create
+    ing or we can do without using it too
+    StringBuilder sb = new StringBuilder(sentence.length());
+    for (int i = words.size() - 1; i >= 0; i--) {
+        sb.append(words.get(i));
+        sb.append(' ');
+    }
+    System.out.println("\n" + sb.toString().trim());
+    return sb.toString().trim();
+}
+
+//string anagram
+public static boolean isAnagram(String word, String anagram) {
+    char[] charFromWord = word.toCharArray();
+    char[] charFromAnagram = anagram.toCharArray();
+    Arrays.sort(charFromWord);
+    Arrays.sort(charFromAnagram);
+    System.out.println(Arrays.equals(charFromWord, charFromAnagram));
+    return Arrays.equals(charFromWord, charFromAnagram);
+}
+
+//reverse a number
+public static int reverseNumber(int number) {
+    int sum = 0;
+    int r = 0;
+    while (number > 0) {
+        r = number % 10;
+        sum = sum * 10 + r;
+        number = number / 10;
+    }
+    System.out.println(sum);
+    return sum;
+}
+
+//first non-repeated character of a string
+//using map
+public static char getFirstNonRepeatedChar(String str) {
+    Map < Character, Integer > charMap = new LinkedHashMap < > (str.length());
+    inkedhashmap to maintain the insertion order so that
+    while iterating later
+    //we find
+    first element during iteration
+    for (char c: str.toCharArray()) {
+        charMap.put(c, charMap.containsKey(c) ? charMap.get(c) + 1 : 1);
+    }
+    for (Map.Entry < Character, Integer > entry: charMap.entrySet()) {
+        if (entry.getValue() == 1) {
+            return entry.getKey();
+        }
+    }
+    return 0;
+}
+
+public static char firstNonRepeatingChar(String word) {
+    //without using map
+    Set < Character > repeating = new HashSet < > ();
+    List < Character > nonRepeating = new ArrayList < > ();
+    for (int i = 0; i < word.length(); i++) {
+        char letter = word.charAt(i);
+        if (repeating.contains(letter)) {
+            continue;
+        }
+        if (nonRepeating.contains(letter)) {
+            nonRepeating.remove((Character) letter);
+            repeating.add(letter);
+        } else {
+            nonRepeating.add(letter);
+        }
+    }
+    return nonRepeating.get(0);
+}
+
+//reverse a string in place
+public static String inPlaceReverse(final String input) {
+    final StringBuilder builder = new StringBuilder(input);
+    int length = builder.length();
+    for (int i = 0; i < length / 2; i++) {
+        final char temp = builder.charAt(i);
+        //final int otherEnd = length - 1 - i;
+        builder.setCharAt(i, builder.charAt(length - 1 - i)); // swap
+        builder.setCharAt(length - 1 - i, temp);
+    }
+    return builder.toString();
+}
+
+//finding the longest arrays with 0 sum in a given array
+private static int maxLen(int arr[], int N) {
+    // using two pointer approach O(n2)
+    int max_len = 0; // Pick a starting point
+    for (int i = 0; i < N; i++) { // Initialize curr_sum for every starting point
+        int curr_sum = 0;
+        for (int j = i; j < N; j++) { // try all subarrays starting with 'i'
+            curr_sum = curr_sum + arr[j];
+            if (curr_sum == 0) // If curr_sum becomes 0, then update max_len
+                max_len = Math.max(max_len, j - i + 1);
+        }
+    }
+    return max_len;
+}
+
+private static int maxLenUsingHashMap(int arr[]) {
+    // using hashmap O(n)
+    // Creates an empty hashMap hM
+    HashMap < Integer, Integer > hM = new HashMap < Integer, Integer > ();
+    int sum = 0; // Initialize sum of elements
+    int max_len = 0; // Initialize result
+    // Traverse through the given array
+    for (int i = 0; i < arr.length; i++) {
+        // Add current element to sum
+        sum = sum + arr[i];
+        if (sum == 0)
+            max_len = i + 1;
+        // Look this sum in hash map
+        Integer prev_i = hM.get(sum);
+        // If this sum is seen before, then update max_len if required
+        if (prev_i != null)
+            max_len = Math.max(max_len, i - prev_i);
+        else // Else put this sum in hash map
+            hM.put(sum, i);
+    }
+    System.out.println(max_len);
+    return max_len;
+}
+
+//second largest element in an array
+private static void secondLargestElement() {
+    int[] myArr = new int[] {
+        5,
+        4,
+        6,
+        7,
+        8,
+        9,
+        10
+    };
+    Arrays.sort(myArr);
+    System.out.println(myArr[myArr.length - 2]);
+}
+
+//Checking pangram String and returning missing characters
+private static String missingPangram(String input) {
+    String result = "";
+    input = input.toLowerCase();
+    char ch = 'a';
+    for (int i = 0; i < 26; i++) {
+        if (!input.contains(String.valueOf(ch))) {
+            result = result + ch;
+        }
+        ch++;
+    }
+    if (result.isEmpty()) {
+        System.out.println("String is pangram");
+        return result;
+    } else {
+        System.out.println("String is not pangram");
+        System.out.println(result);
+        return result;
+    }
+}
+
+//checking for perfect pangram- all letters occuring only once
+private static boolean checkPangram(String strng) {
+    // Initialize a set of characters
+    //Set<Character> set = new HashSet<>(); //realized later that set won't be
+    e to check
+    for perfect because it will avoid adding duplicates of existing
+    List < Character > list = new ArrayList < > ();
+    String str = strng.toLowerCase();
+    for (char ch: str.toCharArray()) {
+        if (ch >= 'a' && ch <= 'z')
+            list.add(ch);
+    }
+    // check if the size is 26 or not
+    System.out.println(list.size() == 26);
+    return list.size() == 26;
+}
+
+//finding element in sorted rotated array
+//Using modified binary search - O(log n), otherwise simple O(n) using linear search
+public static int search(int[] nums, int target) {
+    int left = 0;
+    int right = nums.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        // Case 1: If the middle element is the target
+        if (nums[mid] == target) {
+            return mid;
+        }
+        // Case 2: Left half is sorted
+        if (nums[mid] >= nums[left]) {
+            // If the target is in the sorted left half
+            if (target >= nums[left] && target < nums[mid]) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+        // Case 3: Right half is sorted
+        else {
+            // If the target is in the sorted right half
+            if (target > nums[mid] && target <= nums[right]) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+    }
+    // Target not found
+    return -1;
+}
+
+//Pair with given Sum (Two Sum)
+private static boolean hasTwoCandidates(int[] arr, int sum) {
+    int left = 0;
+    int right = arr.length - 1;
+    Arrays.sort(arr);
+    while (left < right) {
+        if (arr[left] + arr[right] == sum) {
+            return true;
+        } else if (arr[left] + arr[right] < sum) {
+            left++;
+        } else
+            right--;
+    }
+    return false;
+}
+
+//push all zeros to right maintaining order of rest of the elements
+private static void pushZerosToEnd(int arr[], int n) {
+    int count = 0; // Count of non-zero elements
+    // Traverse the array. If element encountered is non-zero, then replace the
+    ment at index 'count'
+    // with this element
+    for (int i = 0; i < n; i++) {
+        if (arr[i] != 0) {
+            arr[count] = arr[i]; // here count is incremented
+            count++;
+        }
+    }
+    // Now all non-zero elements have been shifted to
+    // front and 'count' is set as index of first 0.
+    // Make all elements 0 from count to end.
+    while (count < n)
+        arr[count++] = 0;
+}
+
+//cycle in an array -
+//Cycle - A cycle means that if you start at some index and follow the steps, eventually return to the starting index after k moves,
+//where k is greater than 1. Furthermore, all the steps taken during this process should be exclusively positive or exclusively negative, 
+//enforcing that loop goes in a single direction.
+public int getLengthOfCycle(int[] arr, int startIndex) {
+    if (arr == null || arr.length == 0)
+        return -1;
+    int count = 0;
+    int fast = arr[arr[startIndex]];
+    int slow = arr[startIndex];
+    while (fast != slow) {
+        if (fast >= arr.length)
+            return -1;
+        count++;
+        fast = arr[arr[fast]];
+        slow = arr[slow];
+    }
+    return count;
+}
+
+//print all permutations of a string
+  public static void permutation(String input) {
+      permutation("", input);
+  }
+private static void permutation(String perm, String word) {
+    if (word.isEmpty()) {
+        System.err.println(perm + word);
+    } else {
+        for (int i = 0; i < word.length(); i++) {
+            permutation(perm + word.charAt(i),
+                word.substring(0, i) + word.substring(i + 1, word.length);
+            }
+        }
+    }
+
+// function to find the longest substring containing non-repeating characters
+    public static int longestUniqueSubsttr(String str) {
+        int n = str.length();
+        int res = 0;
+        for (int i = 0; i < n; i++) { //looping whole string once for each character
+            that we find the longest substring as it can start from any character in
+                string
+            // Note : Default values in visited are false
+            boolean[] visited = new boolean[256];
+            for (int j = i; j < n; j++) {
+                // If current character is visited, break the loop
+                if (visited[str.charAt(j)] == true)
+                    break;
+                // Else update the result if this window is larger, and mark
+                rent character as visited.
+                else {
+                    res = Math.max(res, j - i + 1);
+                    visited[str.charAt(j)] = true;
+                }
+            }
+            // Remove the first character of previous window
+            visited[str.charAt(i)] = false;
+        }
+        return res;
+    }
+}
